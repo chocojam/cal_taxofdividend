@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2026 금융소득 종합과세/건보료 가계산기</title>
+    <style>
+        :root {
+            --primary: #0066ff;
+            --danger: #ff3333;
+            --success: #0f9d58;
+            --bg: #f5f7f9;
+            --gray: #6b7280;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+            background: var(--bg);
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 { text-align: center; color: var(--primary); font-size: 24px; margin-bottom: 25px; }
+
+        .input-group {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .field { margin-bottom: 15px; }
+
+        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; color: #666; }
+
+        .input-row { display: flex; gap: 8px; align-items: center; }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 18px;
+            text-align: right;
+            flex: 1;
+        }
+
+        input:focus { border-color: var(--primary); outline: none; }
+
+        button { border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+
+        .calc-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .reset-btn {
+            flex: 0 0 auto;
+            padding: 12px 14px;
+            background: #f3f4f6;
+            color: var(--gray);
+            border: 1px solid #d1d5db;
+            font-size: 14px;
+        }
+
+        #resultArea { display: none; margin-top: 30px; }
+
+        .summary {
+            background: #f0f7ff;
+            border: 1px solid #cce3ff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .summary .total { font-size: 32px; font-weight: 800; color: var(--success); }
+
+        .detail-card {
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: #fafafa;
+            padding: 10px 15px;
+            font-weight: bold;
+            font-size: 14px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-body { padding: 15px; }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .row.bold { font-weight: bold; border-top: 1px dashed #eee; padding-top: 8px; margin-top: 8px; }
+
+        .row.emphasis { color: var(--danger); }
+
+        .row.profit { color: var(--success); }
+
+        .row.small { font-size: 12px; color: #888; margin-top: -4px; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; margin-bottom: 20px; }
+
+        th, td { border: 1px solid #eee; padding: 8px; text-align: center; }
+        th { background: #f9fafb; }
+
+        .highlight { background: #fff9c4 !important; font-weight: bold; }
+
+        .note {
+            font-size: 13px;
+            color: #666;
+            background: #fafafa;
+            border: 1px solid #eee;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 금융소득 종합과세 / 건보료 가계산기</h1>
+
+        <div class="input-group">
+            <div class="field">
+                <label for="salary">근로소득 (총급여/연봉)</label>
+                <div class="input-row">
+                    <input type="text" id="salary" placeholder="0" oninput="formatInput(this)" />
+                    <button type="button" class="reset-btn" onclick="clearField('salary')">초기화</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="finance">금융소득 (이자/배당 합계)</label>
+                <div class="input-row">
+                    <input type="text" id="finance" placeholder="0" oninput="formatInput(this)" />
+                    <button type="button" class="reset-btn" onclick="clearField('finance')">초기화</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="profit">투자수익</label>
+                <div class="input-row">
+                    <input type="text" id="profit" placeholder="0" oninput="formatInput(this)" />
+                    <button type="button" class="reset-btn" onclick="clearField('profit')">초기화</button>
+                </div>
+            </div>
+
+            <button type="button" class="calc-btn" onclick="calculate()">상세 결과 계산하기</button>
+
+            <div class="note">
+                이 계산기는 <b>근로소득자</b>의 금융소득 종합과세 시 추가 세액과 건보료를 추정합니다.<br />
+                기본공제(본인 150만원) 외 다른 공제는 제외된 보수적 수치입니다.
+            </div>
+        </div>
+
+        <div id="resultArea">
+            <div class="summary">
+                <div style="font-weight: 600; color: #555;">최종 투자수익</div>
+                <div class="total" id="sumFinal">0원</div>
+                <div style="font-size: 13px; color: #888; margin-top: 5px;">
+                    투자수익 - (5월 추가세액 + 연 추가 건보료 + 금융소득 기징수액)
+                </div>
+            </div>
+
+            <div id="details"></div>
+
+            <div class="detail-card">
+                <div class="card-header">참고: 관련 세율/공제율표</div>
+                <div class="card-body">
+                    <div style="font-size: 13px; font-weight: bold; margin-bottom: 5px;">[종합소득세율표]</div>
+                    <table id="taxTable">
+                        <tr><th>과세표준</th><th>세율</th><th>누진공제</th></tr>
+                        <tr id="r1"><td>1,400만 이하</td><td>6%</td><td>0</td></tr>
+                        <tr id="r2"><td>5,000만 이하</td><td>15%</td><td>126만</td></tr>
+                        <tr id="r3"><td>8,800만 이하</td><td>24%</td><td>576만</td></tr>
+                        <tr id="r4"><td>1.5억 이하</td><td>35%</td><td>1,544만</td></tr>
+                        <tr id="r5"><td>3억 이하</td><td>38%</td><td>1,994만</td></tr>
+                        <tr id="r6"><td>5억 이하</td><td>40%</td><td>2,594만</td></tr>
+                        <tr id="r7"><td>10억 이하</td><td>42%</td><td>3,594만</td></tr>
+                        <tr id="r8"><td>10억 초과</td><td>45%</td><td>6,594만</td></tr>
+                    </table>
+
+                    <div style="font-size: 13px; font-weight: bold; margin-bottom: 5px; margin-top: 10px;">[근로소득공제율표]</div>
+                    <table>
+                        <tr><th>총급여 구간</th><th>공제액 계산식</th></tr>
+                        <tr><td>500만 이하</td><td>총급여 × 70%</td></tr>
+                        <tr><td>1,500만 이하</td><td>350만 + (500만 초과분 × 40%)</td></tr>
+                        <tr><td>4,500만 이하</td><td>750만 + (1,500만 초과분 × 15%)</td></tr>
+                        <tr><td>1억 이하</td><td>1,200만 + (4,500만 초과분 × 5%)</td></tr>
+                        <tr><td>1억 초과</td><td>1,475만 + (1억 초과분 × 2%) <br><small>(최대 2,000만 한도)</small></td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BASIC_DEDUCTION = 1500000;
+        const FIN_SEPARATE_LIMIT = 20000000;
+        const FIN_WITHHOLDING_RATE = 0.154; // 지방세 포함
+        const HEALTH_RATE = 0.0719; // 건보료율
+        const LTC_RATE_ON_INCOME = 0.009448; // 요양보험료율(소득대비)
+        const MONTHLY_HEALTH_CAP = 4591740;
+
+        function formatInput(obj) {
+            const val = obj.value.replace(/[^0-9]/g, "");
+            obj.value = val.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function parseNum(str) { return Number(String(str || "").replace(/,/g, "")) || 0; }
+        function fmt(num) { return Math.round(num).toLocaleString("ko-KR") + "원"; }
+        function clampMinZero(n) { return Math.max(0, n); }
+
+        function clearField(id) {
+            document.getElementById(id).value = "";
+            document.getElementById("resultArea").style.display = "none";
+        }
+
+        function calcNationalTax(taxBase) {
+            const base = clampMinZero(taxBase);
+            if (base <= 14000000) return base * 0.06;
+            if (base <= 50000000) return 840000 + (base - 14000000) * 0.15;
+            if (base <= 88000000) return 6240000 + (base - 50000000) * 0.24;
+            if (base <= 150000000) return 15360000 + (base - 88000000) * 0.35;
+            if (base <= 300000000) return 37060000 + (base - 150000000) * 0.38;
+            if (base <= 500000000) return 94060000 + (base - 300000000) * 0.40;
+            if (base <= 1000000000) return 174060000 + (base - 500000000) * 0.42;
+            return 384060000 + (base - 1000000000) * 0.45;
+        }
+
+        function getTaxBracketInfo(taxBase) {
+            const base = clampMinZero(taxBase);
+            if (base <= 14000000) return { rate: 6, idx: 1 };
+            if (base <= 50000000) return { rate: 15, idx: 2 };
+            if (base <= 88000000) return { rate: 24, idx: 3 };
+            if (base <= 150000000) return { rate: 35, idx: 4 };
+            if (base <= 300000000) return { rate: 38, idx: 5 };
+            if (base <= 500000000) return { rate: 40, idx: 6 };
+            if (base <= 1000000000) return { rate: 42, idx: 7 };
+            return { rate: 45, idx: 8 };
+        }
+
+        function calculate() {
+            const salary = parseNum(document.getElementById("salary").value);
+            const finance = parseNum(document.getElementById("finance").value);
+            const profit = parseNum(document.getElementById("profit").value);
+
+            // 1단계: 근로소득공제 상세 계산
+            let rawDeduction = 0;
+            let deductRule = "";
+            if (salary <= 5000000) {
+                rawDeduction = salary * 0.70;
+                deductRule = "500만 이하 (70%)";
+            } else if (salary <= 15000000) {
+                rawDeduction = 3500000 + (salary - 5000000) * 0.40;
+                deductRule = "1,500만 이하 (350만 + 500만 초과분 40%)";
+            } else if (salary <= 45000000) {
+                rawDeduction = 7500000 + (salary - 15000000) * 0.15;
+                deductRule = "4,500만 이하 (750만 + 1,500만 초과분 15%)";
+            } else if (salary <= 100000000) {
+                rawDeduction = 12000000 + (salary - 45000000) * 0.05;
+                deductRule = "1억 이하 (1,200만 + 4,500만 초과분 5%)";
+            } else {
+                rawDeduction = 14750000 + (salary - 100000000) * 0.02;
+                deductRule = "1억 초과 (1,475만 + 1억 초과분 2%)";
+            }
+            const workDeduct = Math.min(rawDeduction, 20000000);
+            const workIncome = clampMinZero(salary - workDeduct);
+
+            // 2단계: 과세표준 및 추가세액 상세
+            const baseTaxBase = clampMinZero(workIncome - BASIC_DEDUCTION);
+            const excessFinance = clampMinZero(finance - FIN_SEPARATE_LIMIT);
+            const taxBaseWithExcess = baseTaxBase + excessFinance;
+
+            const taxOnly = calcNationalTax(baseTaxBase);
+            const taxTotal = calcNationalTax(taxBaseWithExcess);
+            const extraNationalTax = clampMinZero(taxTotal - taxOnly);
+            const extraLocalTax = extraNationalTax * 0.10;
+            const extraTaxTotal = extraNationalTax + extraLocalTax;
+            const finWithheld = finance * FIN_WITHHOLDING_RATE;
+
+            // 3단계: 건보료 상세 계산 (소득월액보험료)
+            let monthlyHealth = 0; let monthlyLtc = 0;
+            let healthFormula = "금융소득 2,000만원 이하: 추가분 없음";
+            if (excessFinance > 0) {
+                monthlyHealth = Math.min((excessFinance / 12) * HEALTH_RATE, MONTHLY_HEALTH_CAP);
+                monthlyLtc = (excessFinance / 12) * LTC_RATE_ON_INCOME;
+                healthFormula = `월 부과점수 산식: (${fmt(excessFinance)} / 12) × ${ (HEALTH_RATE*100).toFixed(2) }%`;
+            }
+            const annualHealthTotal = (monthlyHealth + monthlyLtc) * 12;
+            
+            // 최종 합계
+            const finalProfit = profit - (extraTaxTotal + annualHealthTotal + finWithheld);
+            const bracket = getTaxBracketInfo(taxBaseWithExcess);
+
+            // 결과 업데이트
+            document.getElementById("resultArea").style.display = "block";
+            document.getElementById("sumFinal").innerText = fmt(finalProfit);
+            document.getElementById("details").innerHTML = `
+                <div class="detail-card">
+                    <div class="card-header">1단계: 근로소득 및 기본공제 상세</div>
+                    <div class="card-body">
+                        <div class="row"><span>① 총급여(연봉)</span><span>${fmt(salary)}</span></div>
+                        <div class="row profit"><span>② 근로소득공제 (차감)</span><span>- ${fmt(workDeduct)}</span></div>
+                        <div class="row small"><span>└ 산식: ${deductRule}${workDeduct>=20000000?' [한도 2천만원 적용]':''}</span></div>
+                        <div class="row bold"><span>③ 근로소득금액 (①-②)</span><span>${fmt(workIncome)}</span></div>
+                        <div class="row profit"><span>④ 본인 인적공제 (차감)</span><span>- ${fmt(BASIC_DEDUCTION)}</span></div>
+                        <div class="row bold" style="border-top:1px solid #eee; padding-top:8px;">
+                            <span>기준 과세표준(근로만) (③-④)</span><span>${fmt(baseTaxBase)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="card-header">2단계: 금융소득 합산 및 추가세액 상세</div>
+                    <div class="card-body">
+                        <div class="row"><span>금융소득 합계</span><span>${fmt(finance)}</span></div>
+                        <div class="row"><span>종합과세 대상분 (2,000만 초과분)</span><span>+ ${fmt(excessFinance)}</span></div>
+                        <div class="row bold"><span>최종 합산 과세표준</span><span>${fmt(taxBaseWithExcess)}</span></div>
+                        <div class="row small"><span>└ 적용 세율구간: ${bracket.rate}%</span></div>
+                        <hr style="border:0; border-top:1px solid #eee; margin:10px 0;">
+                        <div class="row"><span>합산 전 산출세액 (근로만)</span><span>${fmt(taxOnly)}</span></div>
+                        <div class="row"><span>합산 후 산출세액 (근로+금융)</span><span>${fmt(taxTotal)}</span></div>
+                        <div class="row small"><span>└ 산식: (과표 × 세율) - 누진공제</span></div>
+                        <div class="row emphasis"><span>추가 발생 국세</span><span>${fmt(extraNationalTax)}</span></div>
+                        <div class="row emphasis"><span>추가 지방소득세 (국세의 10%)</span><span>${fmt(extraLocalTax)}</span></div>
+                        <div class="row bold emphasis" style="border-top:1px dashed #ddd; padding-top:5px;">
+                            <span>5월 추가 납부액 (국세+지방세)</span><span>${fmt(extraTaxTotal)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card" style="border-color: #ffccd5;">
+                    <div class="card-header" style="background: #fff0f3;">3단계: 건보료 및 원천징수 합계</div>
+                    <div class="card-body">
+                        <div class="row"><span>연 추가 건강보험료</span><span>${fmt(monthlyHealth * 12)}</span></div>
+                        <div class="row small"><span>└ ${healthFormula}</span></div>
+                        <div class="row"><span>연 추가 장기요양보험료</span><span>${fmt(monthlyLtc * 12)}</span></div>
+                        <div class="row small"><span>└ 산식: (${fmt(excessFinance)} / 12) × ${ (LTC_RATE_ON_INCOME*100).toFixed(4) }% × 12</span></div>
+                        <div class="row emphasis"><span>금융소득 기징수액 (15.4%)</span><span>${fmt(finWithheld)}</span></div>
+                        <div class="row small"><span>└ 산식: ${fmt(finance)} × 15.4% (이미 낸 세금)</span></div>
+                        <div class="row bold profit" style="border-top:2px solid #0f9d58; padding-top:10px; margin-top:10px; font-size:18px;">
+                            <span>최종 투자 실수익</span><span>${fmt(finalProfit)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            for(let i=1; i<=8; i++) document.getElementById("r"+i).className="";
+            document.getElementById("r"+bracket.idx).className="highlight";
+        }
+    </script>
+</body>
+</html>
