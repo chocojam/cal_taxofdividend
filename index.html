@@ -634,7 +634,7 @@
         <div class="summary-item">
             <div class="label green">최종 수익</div>
             <div class="value green large" id="sum_final">—</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">세후 투자수익</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">세후 매매차익</div>
         </div>
     </div>
 
@@ -1001,7 +1001,7 @@
         <div class="card">
             <div class="card-head">
                 <span class="card-step">STEP 3</span>
-                <span class="card-title">건강보험료 · 원천징수 · 최종 실수익</span>
+                <span class="card-title">추가 건강보험료 · 기납부 세액 · 최종 수익</span>
             </div>
             <div class="card-body">
                 ${isComprehensive ? `
@@ -1045,13 +1045,13 @@
 
                 <div style="margin-top:16px; padding:14px; background:var(--green-dim); border:1px solid rgba(52,201,122,0.2); border-radius:var(--radius-sm);">
                     <div class="row" style="font-size:12px;color:var(--text-muted);padding:0 0 6px;">
-                        <span>투자수익(세전) − 추가세액 − 추가건보료 − 기납부 원천징수</span>
+                        <span>매매차익 − (추가세액 + 추가건보료 + 기납부액)</span>
                     </div>
                     <div class="row" style="font-size:11px;color:var(--text-muted);padding:0 0 8px;">
                         <span>${fmt(profit)} − ${fmt(extraTaxTotal)} − ${fmt(health.annual)} − ${fmt(finWithheld)}</span>
                     </div>
                     <div class="row" style="padding:0;font-weight:700;font-size:17px;">
-                        <span class="lbl" style="color:var(--green)">최종 세후 실수익</span>
+                        <span class="lbl" style="color:var(--green)">최종 수익</span>
                         <span class="val" style="font-size:20px;color:var(--green)">${fmt(finalProfit)}</span>
                     </div>
                 </div>
