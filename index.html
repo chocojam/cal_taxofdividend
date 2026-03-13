@@ -246,8 +246,9 @@
     .summary-item { text-align: center; }
 
     .summary-item .label {
-        font-size: 11px;
-        color: var(--text-muted);
+        font-family: var(--mono);
+        font-size: 18px;
+       /* color: var(--text-muted); */
         letter-spacing: 0.06em;
         text-transform: uppercase;
         margin-bottom: 8px;
@@ -268,6 +269,8 @@
     .summary-item .value.red { color: var(--red); }
     .summary-item .value.amber { color: var(--amber); }
     .summary-item .value.orange { color: var(--orange); }
+    .summary-item .label.green { color: var(--green); }
+    .summary-item .label.orange { color: var(--orange); }
 
     .summary-divider {
         width: 1px;
@@ -623,12 +626,12 @@
         </div>
  -->
         <div class="summary-item">
-            <div class="label" style="color: var(--orange); font-size: 22px;">총 비용</div>
+            <div class="label orange">총 비용</div>
             <div class="value orange large" id="sum_loss">—</div>
             <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">추가납부 + 건보료 + 기납부</div>
         </div>
         <div class="summary-item">
-            <div class="label" style="color: var(--green); font-size: 22px;">최종 수익</div>
+            <div class="label green">최종 수익</div>
             <div class="value green large" id="sum_final">—</div>
             <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">세후 투자수익</div>
         </div>
