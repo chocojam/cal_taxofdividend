@@ -624,7 +624,7 @@
  -->
         <div class="summary-item">
             <div class="label">총 비용</div>
-            <div class="value orange large" id="sum_loss">—</div>
+            <div class="value DarkOrange large" id="sum_loss">—</div>
             <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">추가납부 + 건보료 + 기납부</div>
         </div>
         <div class="summary-item">
@@ -823,7 +823,8 @@
         const monthlyBase   = excessFin / 12;
         const monthlyHealth = Math.min(monthlyBase * HEALTH_RATE, MONTHLY_HEALTH_CAP);
         const monthlyLtc    = monthlyHealth * LTC_ON_HEALTH;
-        const annual        = (monthlyHealth + monthlyLtc) * 12;
+        const annual = (Math.round(monthlyHealth) + Math.round(monthlyLtc)) * 12;
+
         return { monthlyHealth, monthlyLtc, annual };
     }
 
