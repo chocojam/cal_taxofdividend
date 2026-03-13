@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>금융소득 초과분 가계산기</title>
+    <title>금융소득 초과분 계산기</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -532,14 +532,14 @@
 
 <!-- header -->
 <div class="page-header">
-    <h1>금융소득 초과분 가계산기</h1>
+    <h1>금융소득 초과분 계산기</h1>
 </div>
 
 <!-- input panel -->
 <div class="input-panel">
 
     <div class="field">
-        <label>근로소득 (총급여 · 연봉) <span class="hint">세전 기준</span></label>
+        <label>근로소득 <span class="hint">(세전)</span></label>
         <div class="input-row">
             <div class="input-wrap">
                 <input type="text" id="salary" placeholder="0" oninput="formatInput(this)" />
@@ -550,7 +550,7 @@
     </div>
 
     <div class="field">
-        <label>금융소득 합계 (이자 + 배당) <span class="hint">세전 수령액 기준</span></label>
+        <label>금융소득 합계 <span class="hint">(세전)</span></label>
         <div class="input-row">
             <div class="input-wrap">
                 <input type="text" id="finance" placeholder="0" oninput="formatInput(this)" />
@@ -561,7 +561,7 @@
     </div>
 
     <div class="field">
-        <label>투자수익 (세전) <span class="hint">수익 총액, 실수익 계산 기준</span></label>
+        <label>투자수익 (세전) <span class="hint"></span></label>
         <div class="input-row">
             <div class="input-wrap">
                 <input type="text" id="profit" placeholder="0" oninput="formatInput(this)" />
@@ -670,7 +670,8 @@
 </div>
 
 <div class="footer">
-    본 계산기는 참고용 추정치입니다. 정확한 세액은 세무사 상담 또는 홈택스를 이용하세요.
+    본 계산기는 참고용 추정치입니다.<br>
+    정확한 세액은 세무사 상담 또는 홈택스를 이용하세요.
 </div>
 
 </div>
