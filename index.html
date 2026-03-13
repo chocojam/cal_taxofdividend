@@ -545,7 +545,7 @@
                 <input type="text" id="salary" placeholder="0" oninput="formatInput(this)" />
                 <span class="input-unit">원</span>
             </div>
-            <button class="clear-btn" onclick="clearField('salary')">X❌</button>
+            <button class="clear-btn" onclick="clearField('salary')">X</button>
         </div>
     </div>
 
@@ -585,12 +585,12 @@
         </div>
         <div class="rate-chips">
             <div class="rate-chip">
-                <span class="chip-key">건강보험료 </span>
+                <span class="chip-key">건강보험료      </span>
                 <input class="chip-input" id="input-health" type="number" step="0.01" min="0" max="20" value="7.09" onchange="onRateChange()" />
                 <span class="chip-unit">%</span>
             </div>
             <div class="rate-chip">
-                <span class="chip-key">장기요양보험료 </span>
+                <span class="chip-key">장기요양보험료      </span>
                 <span class="chip-unit" style="font-size:10px;">건보료 ×</span>
                 <input class="chip-input" id="input-ltc" type="number" step="0.01" min="0" max="50" value="12.95" onchange="onRateChange()" />
                 <span class="chip-unit">%</span>
@@ -609,7 +609,7 @@
     <!-- summary -->
     <div class="summary-card" id="summaryCard">
         <div class="summary-item">
-            <div class="label">5월 추가납부 세액</div>
+     <!--       <div class="label">5월 추가납부 세액</div>
             <div class="value red large" id="sum_tax">—</div>
             <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">국세 + 지방소득세</div>
         </div>
@@ -618,11 +618,11 @@
             <div class="value amber large" id="sum_health">—</div>
             <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">건강 + 장기요양</div>
         </div>
-
+ -->
         <div class="summary-item">
             <div class="label">총 비용</div>
-            <div class="value red large" id="sum_loss">—</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">종소세 + 건보료 + 장기요양 + 기납부</div>
+            <div class="value orange large" id="sum_loss">—</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">추가납부 + 건보료 + 기납부</div>
         </div>
         <div class="summary-item">
             <div class="label">최종 수익</div>
